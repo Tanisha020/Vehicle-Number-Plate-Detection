@@ -18,19 +18,19 @@ def process_image(image_path):
     count = None
 
     for c in contours:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.018 * peri, True)
+        perimeter = cv2.arcLength(c, True)
+        points = cv2.approxPolyDP(c, 0.018 * perimeter, True)
 
-        if len(approx) == 4:
-            count = approx
+        if len(points) == 4:
+            count = points
             break
 
     if count is not None:
         cv2.drawContours(img, [count], -1, (0, 255, 0), 3) 
     else:
-        print(f"No contour detected in {image_path}")
+        print(f"No number plate detected in {image_path}")
 
-    cv2.imshow('Detected Number Plate', img)
+    cv2.imshow('Number Plate', img)
 
 for i in range(1, 11):  
     image_path = f'test_images/test_image_0{i}.jpeg'  
