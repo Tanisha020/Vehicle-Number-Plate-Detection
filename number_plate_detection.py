@@ -1,0 +1,40 @@
+import cv2
+import imutils
+import numpy as np
+
+def process_image(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    img = cv2.resize(img, (600, 400))
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.bilateralFilter(gray, 13, 15, 15)
+
+    edged = cv2.Canny(gray, 30, 200)
+
+    contours = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = imutils.grab_contours(contours)
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+
+    count = None
+
+    for c in contours:
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.018 * peri, True)
+
+        if len(approx) == 4:
+            count = approx
+            break
+
+    if count is not None:
+        cv2.drawContours(img, [count], -1, (0, 255, 0), 3) 
+    else:
+        print(f"No contour detected in {image_path}")
+
+    cv2.imshow('Detected Number Plate', img)
+
+for i in range(1, 11):  
+    image_path = f'test_images/test_image_0{i}.jpeg'  
+    process_image(image_path)
+    cv2.waitKey(0) 
+
+cv2.destroyAllWindows()
