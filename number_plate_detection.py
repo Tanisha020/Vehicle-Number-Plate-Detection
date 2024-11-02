@@ -32,8 +32,8 @@ def process_image(image_path):
 
     cv2.imshow('Number Plate', img)
 
-for i in range(1, 11):  
-    image_path = f'test_images/test_image_0{i}.jpeg'  
+for i in range(1, 10):  
+    image_path = f'ANPR Test/Cars{i}.png'  
     process_image(image_path)
     cv2.waitKey(0) 
 
